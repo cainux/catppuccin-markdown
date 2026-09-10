@@ -4,10 +4,17 @@
   "description": "Catppuccin Mocha styling for the built-in Markdown preview, with styled task-list checkboxes.",
   "version": "1.1.0",
   "publisher": "local",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cainux/catppuccin-markdown.git"
+  },
   "engines": {
     "vscode": "^1.60.0"
   },
   "main": "./extension.js",
+  "scripts": {
+    "package": "npx --yes @vscode/vsce package --skip-license"
+  },
   "activationEvents": [
     "onLanguage:markdown"
   ],

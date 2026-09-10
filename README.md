@@ -23,7 +23,26 @@ adds GFM-style task-list checkboxes.
   target it. This exists because the bundled `markdown-language-features` extension in this
   VS Code build doesn't ship a task-list plugin.
 
-## Install
+## Install on another machine
+
+Build a `.vsix` and install it — no clone, no symlink, and VS Code handles placement:
+
+```sh
+npm run package                                    # -> catppuccin-markdown-<version>.vsix
+code --install-extension catppuccin-markdown-1.1.0.vsix
+```
+
+Then reload the window. `npm run package` shells out to `@vscode/vsce` via `npx`, so
+there is nothing to install first beyond Node.
+
+To update later, bump `version` in `package.json`, re-package, and install the new `.vsix`
+(VS Code replaces the older version).
+
+> Note: don't install the `.vsix` on the machine that uses the symlinked dev setup below —
+> both resolve to the same `local.catppuccin-markdown-<version>` directory name and would
+> collide.
+
+## Development install (this machine)
 
 The extension is unpacked — VS Code loads it straight from the extensions directory.
 This repo is symlinked into place:
@@ -36,7 +55,7 @@ Reload the VS Code window (`Developer: Reload Window`) after changing any of the
 The directory name encodes the version, so bump the symlink name to match `package.json`
 when the version changes.
 
-## Development
+## Notes
 
-There is no build step and no dependencies — `extension.js` is plain CommonJS and the CSS
+There is no build step and no runtime dependencies — `extension.js` is plain CommonJS and the CSS
 is loaded as-is. Edit, reload the window, and open a Markdown preview to see the result.
