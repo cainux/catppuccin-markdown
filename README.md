@@ -23,26 +23,45 @@ adds GFM-style task-list checkboxes.
   target it. This exists because the bundled `markdown-language-features` extension in this
   VS Code build doesn't ship a task-list plugin.
 
-## Install on another machine
+## Install
 
-Build a `.vsix` and install it — no clone, no symlink, and VS Code handles placement:
+### From a release (easiest)
+
+Download the `.vsix` from the [latest release][releases] — no clone, no build, and no
+Node required:
+
+```sh
+gh release download --repo cainux/catppuccin-markdown --pattern '*.vsix'
+code --install-extension ./catppuccin-markdown-*.vsix
+```
+
+Without the `gh` CLI, download the `.vsix` from the [releases page][releases] and either
+run `code --install-extension <file>.vsix`, or, in VS Code, open the Extensions view and
+choose **Install from VSIX…** from the `...` menu.
+
+Then reload the window (`Developer: Reload Window`).
+
+To update, download the newer `.vsix` and install it the same way — VS Code replaces the
+older version.
+
+[releases]: https://github.com/cainux/catppuccin-markdown/releases/latest
+
+### Build from source
+
+Only needed if you want to install unreleased changes. Requires Node:
 
 ```sh
 npm run package                                    # -> catppuccin-markdown-<version>.vsix
-code --install-extension catppuccin-markdown-1.1.0.vsix
+code --install-extension ./catppuccin-markdown-*.vsix
 ```
 
-Then reload the window. `npm run package` shells out to `@vscode/vsce` via `npx`, so
-there is nothing to install first beyond Node.
+`npm run package` shells out to `@vscode/vsce` via `npx`, so there is nothing to install
+first. Releases are built by the same command in CI, on any `v*` tag.
 
-To update later, bump `version` in `package.json`, re-package, and install the new `.vsix`
-(VS Code replaces the older version).
+> Note: don't install the `.vsix` on a machine using the symlinked dev setup below — both
+> resolve to the same `local.catppuccin-markdown-<version>` directory name and would collide.
 
-> Note: don't install the `.vsix` on the machine that uses the symlinked dev setup below —
-> both resolve to the same `local.catppuccin-markdown-<version>` directory name and would
-> collide.
-
-## Development install (this machine)
+## Development install
 
 The extension is unpacked — VS Code loads it straight from the extensions directory.
 This repo is symlinked into place:
