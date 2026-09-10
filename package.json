@@ -2,7 +2,7 @@
   "name": "catppuccin-markdown",
   "displayName": "Catppuccin Markdown Preview",
   "description": "Catppuccin Mocha styling for the built-in Markdown preview, with styled task-list checkboxes.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "local",
   "engines": {
     "vscode": "^1.60.0"
@@ -15,6 +15,11 @@
     "markdown.previewStyles": [
       "./styles/catppuccin-mocha.css"
     ],
-    "markdown.markdownItPlugins": true
+    "markdown.markdownItPlugins": true,
+    "configurationDefaults": {
+      "workbench.editorAssociations": {
+        "*.md": "vscode.markdown.preview.editor"
+      }
+    }
   }
 }
