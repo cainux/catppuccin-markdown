@@ -1,0 +1,20 @@
+{
+  "name": "catppuccin-markdown",
+  "displayName": "Catppuccin Markdown Preview",
+  "description": "Catppuccin Mocha styling for the built-in Markdown preview, with styled task-list checkboxes.",
+  "version": "1.0.0",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
+  "contributes": {
+    "markdown.previewStyles": [
+      "./styles/catppuccin-mocha.css"
+    ],
+    "markdown.markdownItPlugins": true
+  }
+}
