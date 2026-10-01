@@ -13,7 +13,8 @@
   },
   "main": "./extension.js",
   "scripts": {
-    "package": "npx --yes @vscode/vsce package --skip-license"
+    "package": "npx --yes @vscode/vsce package --skip-license",
+    "dev-install": "node scripts/dev-install.js"
   },
   "activationEvents": [
     "onLanguage:markdown"

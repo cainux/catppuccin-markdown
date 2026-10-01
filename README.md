@@ -63,16 +63,24 @@ first. Releases are built by the same command in CI, on any `v*` tag.
 
 ## Development install
 
-The extension is unpacked — VS Code loads it straight from the extensions directory.
-This repo is symlinked into place:
+The extension is unpacked — VS Code loads it straight from your clone via a symlink in the
+extensions directory. A symlink alone isn't enough: VS Code only loads extensions listed in
+`~/.vscode/extensions/extensions.json`, so the clone must be registered there too. With
+VS Code **fully quit** (it rewrites `extensions.json` on exit and would drop the entry), run
+from the repo root:
 
 ```sh
-ln -s ~/code/catppuccin-markdown ~/.vscode/extensions/local.catppuccin-markdown-1.1.0
+npm run dev-install
 ```
 
-Reload the VS Code window (`Developer: Reload Window`) after changing any of these files.
-The directory name encodes the version, so bump the symlink name to match `package.json`
-when the version changes.
+This symlinks the clone to `~/.vscode/extensions/local.catppuccin-markdown-<version>` and
+adds a matching entry to `extensions.json`. It is safe to re-run, and it also replaces any
+symlink left over from an older version, so run it again whenever the version in
+`package.json` changes. Set `VSCODE_EXTENSIONS` to target a different extensions directory.
+
+Whatever branch is checked out is what VS Code loads, so to try a branch, check it out and
+reload the VS Code window (`Developer: Reload Window`). Reload after changing any of these
+files too.
 
 ## Notes
 
