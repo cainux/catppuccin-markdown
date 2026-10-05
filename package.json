@@ -2,7 +2,7 @@
   "name": "catppuccin-markdown",
   "displayName": "Catppuccin Markdown Preview",
   "description": "Catppuccin Mocha styling for the built-in Markdown preview, with styled task-list checkboxes.",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "publisher": "local",
   "repository": {
     "type": "git",
