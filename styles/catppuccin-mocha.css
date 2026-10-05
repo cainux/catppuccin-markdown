@@ -201,3 +201,11 @@ li.task-list-item input[type="checkbox"]:checked ~ * {
 .mermaid-content svg {
   max-width: 100% !important;
 }
+
+/* Author classDef/style fills are usually light-theme pastels; the theme's light label text vanishes on them */
+.mermaid-content .node:has([style*="fill"]):not(:has([style*="color"])) :is(.nodeLabel, .nodeLabel *) {
+  color: var(--ctp-crust) !important;
+}
+.mermaid-content .node:has([style*="fill"]):not(:has([style*="color"])) text {
+  fill: var(--ctp-crust) !important;
+}
