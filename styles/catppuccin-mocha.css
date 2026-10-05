@@ -34,11 +34,35 @@ body.vscode-dark, body.vscode-high-contrast {
   color: var(--ctp-text);
 }
 
+/* Built-in mermaid-markdown-features derives its diagram theme from these vars */
+body.vscode-dark, body.vscode-high-contrast {
+  --vscode-editor-background: var(--ctp-base);
+  --vscode-foreground: var(--ctp-text);
+  --vscode-editor-foreground: var(--ctp-text);
+  --vscode-charts-foreground: var(--ctp-text);
+  --vscode-charts-lines: var(--ctp-overlay2);
+  --vscode-editorWidget-background: var(--ctp-surface0);
+  --vscode-editorWidget-border: var(--ctp-lavender);
+  --vscode-input-background: var(--ctp-surface1);
+  --vscode-input-foreground: var(--ctp-text);
+  --vscode-input-border: var(--ctp-surface2);
+  --vscode-textBlockQuote-background: var(--ctp-mantle);
+  --vscode-textBlockQuote-border: var(--ctp-mauve);
+  --vscode-inputValidation-errorBackground: var(--ctp-surface0);
+  --vscode-editorError-foreground: var(--ctp-red);
+  --vscode-charts-blue: var(--ctp-blue);
+  --vscode-charts-green: var(--ctp-green);
+  --vscode-charts-orange: var(--ctp-peach);
+  --vscode-charts-red: var(--ctp-red);
+  --vscode-charts-purple: var(--ctp-mauve);
+  --vscode-charts-yellow: var(--ctp-yellow);
+}
+
 body {
   font-family: -apple-system, "Segoe UI", "Inter", sans-serif;
   font-size: 15px;
   line-height: 1.7;
-  max-width: 860px;
+  min-width: 860px;
   padding: 2rem 3rem;
 }
 
@@ -171,4 +195,9 @@ li.task-list-item {
 /* fallback: some renderers mark the <li> itself rather than children */
 li.task-list-item input[type="checkbox"]:checked ~ * {
   color: var(--ctp-overlay1);
+}
+
+/* Mermaid: mermaid caps the SVG at its natural width via an inline max-width */
+.mermaid-content svg {
+  max-width: 100% !important;
 }
