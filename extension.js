@@ -56,11 +56,65 @@ function taskLists(md) {
   });
 }
 
+// OpenSpec spec.md only: collapse each "Scenario:" heading and its body into a closed <details>.
+// Done at render time because tokenizing runs without env.currentDocument; only render() knows the file.
+function specScenarios(md) {
+  const isSpecFile = (env) => {
+    const doc = env && env.currentDocument;
+    const path = doc && (typeof doc === "string" ? doc : doc.path || doc.fsPath);
+    return typeof path === "string" && /(^|[\\/])spec\.md$/i.test(path);
+  };
+
+  const collapse = (tokens) => {
+    const Token = tokens[0].constructor;
+    const html = (content) => {
+      const t = new Token("html_block", "", 0);
+      t.content = content;
+      return t;
+    };
+    const out = [];
+    let openLevel = 0;
+
+    const close = () => {
+      if (openLevel) out.push(html("</details>\n"));
+      openLevel = 0;
+    };
+
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+
+      if (token.type !== "heading_open") {
+        out.push(token);
+        continue;
+      }
+
+      const level = Number(token.tag.slice(1));
+      if (openLevel && level <= openLevel) close();
+
+      if (/^Scenario:/i.test(tokens[i + 1].content)) {
+        out.push(html('<details class="spec-scenario">\n<summary>'));
+        out.push(token, tokens[i + 1], tokens[i + 2]);
+        out.push(html("</summary>\n"));
+        openLevel = level;
+        i += 2;
+      } else {
+        out.push(token);
+      }
+    }
+    close();
+    return out;
+  };
+
+  const render = md.renderer.render.bind(md.renderer);
+  md.renderer.render = (tokens, options, env) =>
+    render(isSpecFile(env) && tokens.length ? collapse(tokens) : tokens, options, env);
+}
+
 module.exports = {
   activate() {
     return {
       extendMarkdownIt(md) {
-        return md.use(taskLists);
+        return md.use(taskLists).use(specScenarios);
       },
     };
   },
