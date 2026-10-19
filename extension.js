@@ -56,7 +56,8 @@ function taskLists(md) {
   });
 }
 
-// OpenSpec spec.md only: collapse each "Scenario:" heading and its body into a closed <details>.
+// OpenSpec spec.md only: collapse each "Scenario:" heading and its body into a closed <details>,
+// and tag SHALL / SHALL NOT for styling.
 // Done at render time because tokenizing runs without env.currentDocument; only render() knows the file.
 function specScenarios(md) {
   const isSpecFile = (env) => {
@@ -105,9 +106,37 @@ function specScenarios(md) {
     return out;
   };
 
+  const shallRe = /\b(SHALL NOT|SHALL)\b/;
+
+  // Clones inline tokens rather than mutating them: the token array is cached by VS Code.
+  const tagShall = (tokens) =>
+    tokens.map((token) => {
+      if (token.type !== "inline" || !token.children) return token;
+
+      const children = [];
+      for (const child of token.children) {
+        if (child.type !== "text" || !shallRe.test(child.content)) {
+          children.push(child);
+          continue;
+        }
+        child.content.split(new RegExp(shallRe.source, "g")).forEach((part, idx) => {
+          if (!part) return;
+          const t = new child.constructor(idx % 2 ? "html_inline" : "text", "", 0);
+          if (idx % 2) {
+            const cls = part === "SHALL NOT" ? "spec-shall-not" : "spec-shall";
+            t.content = `<span class="${cls}">${part}</span>`;
+          } else {
+            t.content = part;
+          }
+          children.push(t);
+        });
+      }
+      return Object.assign(Object.create(Object.getPrototypeOf(token)), token, { children });
+    });
+
   const render = md.renderer.render.bind(md.renderer);
   md.renderer.render = (tokens, options, env) =>
-    render(isSpecFile(env) && tokens.length ? collapse(tokens) : tokens, options, env);
+    render(isSpecFile(env) && tokens.length ? collapse(tagShall(tokens)) : tokens, options, env);
 }
 
 module.exports = {

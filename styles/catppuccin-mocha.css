@@ -230,3 +230,12 @@ details.spec-scenario > summary > h4 {
 details.spec-scenario[open] > summary {
   margin-bottom: 0.4em;
 }
+
+/* OpenSpec spec.md normative keywords (see extension.js) */
+.spec-shall,
+.spec-shall-not {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.spec-shall { color: var(--ctp-green); }
+.spec-shall-not { color: var(--ctp-red); }
