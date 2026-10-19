@@ -248,3 +248,7 @@ h2.spec-requirement {
   color: var(--ctp-mauve);
   font-size: 1.5em;
 }
+h3.spec-requirement::before,
+h2.spec-requirement::before {
+  content: "📌 ";
+}
