@@ -57,7 +57,7 @@ function taskLists(md) {
 }
 
 // OpenSpec spec.md only: collapse each "Scenario:" heading and its body into a closed <details>,
-// and tag SHALL / SHALL NOT for styling.
+// tag SHALL / SHALL NOT, ## sections and Requirement headings for styling.
 // Done at render time because tokenizing runs without env.currentDocument; only render() knows the file.
 function specScenarios(md) {
   const isSpecFile = (env) => {
@@ -134,9 +134,26 @@ function specScenarios(md) {
       return Object.assign(Object.create(Object.getPrototypeOf(token)), token, { children });
     });
 
+  const headingClass = (token, next) => {
+    if (token.tag === "h2") return "spec-section";
+    if (/^Requirement:/i.test(next.content)) return "spec-requirement";
+    return null;
+  };
+
+  const tagHeadings = (tokens) =>
+    tokens.map((token, i) => {
+      const cls = token.type === "heading_open" && headingClass(token, tokens[i + 1]);
+      if (!cls) return token;
+
+      const clone = Object.assign(Object.create(Object.getPrototypeOf(token)), token);
+      clone.attrs = token.attrs ? token.attrs.map((a) => a.slice()) : null;
+      clone.attrJoin("class", cls);
+      return clone;
+    });
+
   const render = md.renderer.render.bind(md.renderer);
   md.renderer.render = (tokens, options, env) =>
-    render(isSpecFile(env) && tokens.length ? collapse(tagShall(tokens)) : tokens, options, env);
+    render(isSpecFile(env) && tokens.length ? collapse(tagHeadings(tagShall(tokens))) : tokens, options, env);
 }
 
 module.exports = {

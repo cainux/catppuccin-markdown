@@ -216,7 +216,7 @@ details.spec-scenario {
 }
 details.spec-scenario > summary {
   cursor: pointer;
-  color: var(--ctp-mauve);
+  color: var(--ctp-lavender);
 }
 details.spec-scenario > summary:hover {
   color: var(--ctp-text);
@@ -239,3 +239,12 @@ details.spec-scenario[open] > summary {
 }
 .spec-shall { color: var(--ctp-green); }
 .spec-shall-not { color: var(--ctp-red); }
+
+h2.spec-section {
+  color: var(--ctp-overlay2);
+}
+h3.spec-requirement,
+h2.spec-requirement {
+  color: var(--ctp-mauve);
+  font-size: 1.5em;
+}
