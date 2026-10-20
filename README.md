@@ -1,8 +1,9 @@
 # Catppuccin Markdown Preview
 
 A small personal VS Code extension that restyles the **built-in Markdown preview**
-with the [Catppuccin Mocha](https://github.com/catppuccin/catppuccin) palette, and
-adds GFM-style task-list checkboxes.
+with the [Catppuccin Mocha](https://github.com/catppuccin/catppuccin) palette, adds
+GFM-style task-list checkboxes, and makes [OpenSpec](https://github.com/Fission-AI/OpenSpec)
+`spec.md` files easier to read and navigate.
 
 ## What it does
 
@@ -21,7 +22,23 @@ adds GFM-style task-list checkboxes.
   `<input type="checkbox">`, and tags the item with `task-list-item` /
   `task-list-item-checked` (and the parent list with `contains-task-list`) so the CSS can
   target it. This exists because the bundled `markdown-language-features` extension in this
-  VS Code build doesn't ship a task-list plugin.
+  VS Code build doesn't ship a task-list plugin. It also applies the OpenSpec `spec.md`
+  tweaks below.
+
+## OpenSpec `spec.md` previews
+
+Applies only to files named `spec.md`; all other Markdown renders as before.
+
+- **Collapsed scenarios** - each `#### Scenario: ...` heading and its WHEN/THEN body is a
+  closed disclosure. Click a heading to expand it, so you can skim the requirements and then
+  the scenario headings.
+- **`SHALL` / `SHALL NOT`** - `SHALL` is green and `SHALL NOT` is red, both semibold. Whole
+  words only, and inline code is left alone.
+- **Headings** - `## ` section headings are muted, and `### Requirement: ...` headings are
+  larger, prefixed with 📌, and keep the mauve heading colour.
+
+This is done at render time (VS Code only supplies the file name when rendering), so it
+needs no settings and works with the default `*.md` preview editor.
 
 ## Install
 
