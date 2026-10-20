@@ -34,6 +34,8 @@ Applies only to files named `spec.md`; all other Markdown renders as before.
   the scenario headings.
 - **`SHALL` / `SHALL NOT`** - `SHALL` is green and `SHALL NOT` is red, both semibold. Whole
   words only, and inline code is left alone.
+- **Scenario steps** - the bold `GIVEN` / `WHEN` / `THEN` / `AND` / `BUT` keywords inside a
+  scenario are coloured (mauve, muted yellow, blue, grey, grey).
 - **Headings** - `## ` section headings are muted, and `### Requirement: ...` headings are
   larger, prefixed with 📌, and keep the mauve heading colour.
 

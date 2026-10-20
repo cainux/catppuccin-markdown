@@ -57,7 +57,7 @@ function taskLists(md) {
 }
 
 // OpenSpec spec.md only: collapse each "Scenario:" heading and its body into a closed <details>,
-// tag SHALL / SHALL NOT, ## sections and Requirement headings for styling.
+// tag SHALL / SHALL NOT, GIVEN/WHEN/THEN steps, ## sections and Requirement headings for styling.
 // Done at render time because tokenizing runs without env.currentDocument; only render() knows the file.
 function specScenarios(md) {
   const isSpecFile = (env) => {
@@ -134,6 +134,24 @@ function specScenarios(md) {
       return Object.assign(Object.create(Object.getPrototypeOf(token)), token, { children });
     });
 
+  const stepRe = /^(GIVEN|WHEN|THEN|AND|BUT)$/;
+
+  const tagSteps = (tokens) =>
+    tokens.map((token) => {
+      if (token.type !== "inline" || !token.children) return token;
+
+      const children = token.children.map((child, i) => {
+        const next = token.children[i + 1];
+        if (child.type !== "strong_open" || !next || !stepRe.test(next.content)) return child;
+
+        const clone = Object.assign(Object.create(Object.getPrototypeOf(child)), child);
+        clone.attrs = child.attrs ? child.attrs.map((a) => a.slice()) : null;
+        clone.attrJoin("class", `spec-step spec-${next.content.toLowerCase()}`);
+        return clone;
+      });
+      return Object.assign(Object.create(Object.getPrototypeOf(token)), token, { children });
+    });
+
   const headingClass = (token, next) => {
     if (token.tag === "h2") return "spec-section";
     if (/^Requirement:/i.test(next.content)) return "spec-requirement";
@@ -153,7 +171,7 @@ function specScenarios(md) {
 
   const render = md.renderer.render.bind(md.renderer);
   md.renderer.render = (tokens, options, env) =>
-    render(isSpecFile(env) && tokens.length ? collapse(tagHeadings(tagShall(tokens))) : tokens, options, env);
+    render(isSpecFile(env) && tokens.length ? collapse(tagHeadings(tagSteps(tagShall(tokens)))) : tokens, options, env);
 }
 
 module.exports = {
