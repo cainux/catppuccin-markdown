@@ -211,6 +211,14 @@ li.task-list-item input[type="checkbox"]:checked ~ * {
 }
 
 /* OpenSpec spec.md scenarios: collapsed to their heading (see extension.js) */
+p.spec-scenarios {
+  margin: 1em 0 0.2em;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ctp-overlay1);
+}
 details.spec-scenario {
   margin: 0.4em 0;
 }

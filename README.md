@@ -31,14 +31,15 @@ Applies only to files named `spec.md`; all other Markdown renders as before.
 
 - **Collapsed scenarios** - each `#### Scenario: ...` heading and its WHEN/THEN body is a
   closed disclosure. Click a heading to expand it, so you can skim the requirements and then
-  the scenario headings.
+  the scenario headings. Each run of scenarios gets a small "Scenarios" label above it.
 - **`SHALL` / `SHALL NOT`** - `SHALL` is green and `SHALL NOT` is red, both semibold. Whole
   words only, and inline code is left alone.
 - **Scenario steps** - the bold step keywords inside an expanded scenario are coloured and
   slightly letter-spaced: `GIVEN` mauve, `WHEN` muted yellow, `THEN` blue, `AND` / `BUT`
   grey. Only a bold keyword is matched (`**WHEN**`), so ordinary bold text is unchanged.
 - **Headings** - `## ` section headings are muted, and `### Requirement: ...` headings are
-  larger, prefixed with 📌, and keep the mauve heading colour.
+  larger, prefixed with 📌, and keep the mauve heading colour. The redundant `Requirement: `
+  and `Scenario: ` prefixes are dropped from the heading text.
 
 This is done at render time (VS Code only supplies the file name when rendering), so it
 needs no settings and works with the default `*.md` preview editor.

@@ -57,7 +57,8 @@ function taskLists(md) {
 }
 
 // OpenSpec spec.md only: collapse each "Scenario:" heading and its body into a closed <details>,
-// tag SHALL / SHALL NOT, GIVEN/WHEN/THEN steps, ## sections and Requirement headings for styling.
+// tag SHALL / SHALL NOT, GIVEN/WHEN/THEN steps, ## sections and Requirement headings for styling,
+// then drop the redundant "Requirement:" / "Scenario:" heading prefixes.
 // Done at render time because tokenizing runs without env.currentDocument; only render() knows the file.
 function specScenarios(md) {
   const isSpecFile = (env) => {
@@ -75,6 +76,7 @@ function specScenarios(md) {
     };
     const out = [];
     let openLevel = 0;
+    let inScenarios = false;
 
     const close = () => {
       if (openLevel) out.push(html("</details>\n"));
@@ -93,12 +95,15 @@ function specScenarios(md) {
       if (openLevel && level <= openLevel) close();
 
       if (/^Scenario:/i.test(tokens[i + 1].content)) {
+        if (!inScenarios) out.push(html('<p class="spec-scenarios">Scenarios</p>\n'));
+        inScenarios = true;
         out.push(html('<details class="spec-scenario">\n<summary>'));
         out.push(token, tokens[i + 1], tokens[i + 2]);
         out.push(html("</summary>\n"));
         openLevel = level;
         i += 2;
       } else {
+        inScenarios = false;
         out.push(token);
       }
     }
@@ -169,9 +174,36 @@ function specScenarios(md) {
       return clone;
     });
 
+  const prefixRe = /^(Requirement|Scenario):\s*/i;
+
+  // Runs after the heading tags and collapse, which match on these prefixes.
+  const stripPrefixes = (tokens) =>
+    tokens.map((token, i) => {
+      const prev = tokens[i - 1];
+      if (token.type !== "inline" || !prev || prev.type !== "heading_open" || !prefixRe.test(token.content)) {
+        return token;
+      }
+
+      const children = token.children.slice();
+      const first = children[0];
+      if (first && first.type === "text") {
+        children[0] = Object.assign(Object.create(Object.getPrototypeOf(first)), first, {
+          content: first.content.replace(prefixRe, ""),
+        });
+      }
+      return Object.assign(Object.create(Object.getPrototypeOf(token)), token, {
+        content: token.content.replace(prefixRe, ""),
+        children,
+      });
+    });
+
   const render = md.renderer.render.bind(md.renderer);
   md.renderer.render = (tokens, options, env) =>
-    render(isSpecFile(env) && tokens.length ? collapse(tagHeadings(tagSteps(tagShall(tokens)))) : tokens, options, env);
+    render(
+      isSpecFile(env) && tokens.length ? stripPrefixes(collapse(tagHeadings(tagSteps(tagShall(tokens))))) : tokens,
+      options,
+      env,
+    );
 }
 
 module.exports = {
