@@ -119,7 +119,30 @@ function specScenarios(md) {
       if (token.type !== "inline" || !token.children) return token;
 
       const children = [];
-      for (const child of token.children) {
+      const kids = token.children.slice();
+      for (let i = 0; i < kids.length; i++) {
+        const child = kids[i];
+        const brk = kids[i + 1];
+        const next = kids[i + 2];
+        if (
+          child.type === "text" && /\bSHALL$/.test(child.content) &&
+          brk && (brk.type === "softbreak" || brk.type === "hardbreak") &&
+          next && next.type === "text" && /^NOT\b/.test(next.content)
+        ) {
+          const mk = (type, content) => {
+            const t = new child.constructor(type, "", 0);
+            t.content = content;
+            return t;
+          };
+          const before = child.content.slice(0, -"SHALL".length);
+          if (before) children.push(mk("text", before));
+          children.push(mk("html_inline", '<span class="spec-shall-not">SHALL'));
+          children.push(brk);
+          children.push(mk("html_inline", "NOT</span>"));
+          kids[i + 2] = mk("text", next.content.slice("NOT".length));
+          i += 1;
+          continue;
+        }
         if (child.type !== "text" || !shallRe.test(child.content)) {
           children.push(child);
           continue;
